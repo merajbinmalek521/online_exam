@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSV Reader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      text-align: center;
+      background: #f7f7f7;
+    }
+    #dataTable {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 80%;
+    }
+    #dataTable th, #dataTable td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+    #dataTable th {
+      background: #ddd;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📂 CSV File Reader</h2>
+
+  <!-- Upload Button -->
+  <input type="file" id="csvFile" accept=".csv" style="display:none">
+  <button onclick="document.getElementById('csvFile').click()">Upload CSV</button>
+
+  <!-- Read Button -->
+  <button onclick="readCSV()">Read & Show CSV</button>
+
+  <!-- Table Display -->
+  <div id="output"></div>
+
+  <script>
+    let selectedFile;
+
+    // Handle file selection
+    document.getElementById('csvFile').addEventListener('change', (event) => {
+      selectedFile = event.target.files[0];
+      if (selectedFile) {
+        alert(`File selected: ${selectedFile.name}`);
+      }
+    });
+
+    // Read and display CSV file
+    function readCSV() {
+      if (!selectedFile) {
+        alert('Please upload a CSV file first!');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const rows = e.target.result.split('\n').map(row => row.split(','));
+        displayTable(rows);
+      };
+      reader.readAsText(selectedFile);
+    }
+
+    // Display CSV as HTML table
+    function displayTable(rows) {
+      let table = '<table id="dataTable">';
+      rows.forEach((row, index) => {
+        table += '<tr>';
+        row.forEach(cell => {
+          if (index === 0)
+            table += `<th>${cell}</th>`;
+          else
+            table += `<td>${cell}</td>`;
+        });
+        table += '</tr>';
+      });
+      table += '</table>';
+      document.getElementById('output').innerHTML = table;
+    }
+  </script>
+</body>
+</html>
